@@ -5,33 +5,11 @@ import FastClick from 'fastclick'
 import VueRouter from 'vue-router'
 import App from './App'
 import store from './store'
-import { LoadingPlugin, AlertPlugin } from 'vux'
-Vue.use(LoadingPlugin)
-Vue.use(AlertPlugin)
 //import Hello from './components/Hello'
 
 Vue.use(VueRouter)
 
-const routes = [{
-  path: '/',
-  component: function (resolve) {
-    require(['./pages/homepage'], resolve);
-  }
-},
-{
-  path: '/page1',
-  component: function (resolve) {
-    require(['./pages/page1'], resolve);
-  }
-},
-{
-  path: '/page2/:test',
-  name: "user",
-  component: function (resolve) {
-    require(['./pages/page2'], resolve);
-  }
-}
-]
+const routes = require('./routes.js');
 
 const router = new VueRouter({
   routes

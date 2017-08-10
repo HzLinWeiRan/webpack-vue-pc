@@ -1,5 +1,5 @@
 {
-  "name": "webpack-vue-project",
+  "name": "webpack-vue-pc",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "",
@@ -7,19 +7,19 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "node build/build.js",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "eslint --ext .js,.vue src",
+    "init": "node build/fs-init.js"
   },
   "dependencies": {
     "axios": "^0.16.1",
+    "element-ui": "^1.4.1",
     "fastclick": "^1.0.6",
     "vue": "^2.2.2",
     "vue-router": "^2.2.0",
     "vuex": "^2.1.1",
-    "vuex-i18n": "^1.3.1",
-    "vux": "^2.2.1"
+    "vuex-i18n": "^1.3.1"
   },
   "devDependencies": {
-    "@kazupon/vue-i18n-loader": "^0.2.0",
     "autoprefixer": "^6.7.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
@@ -43,6 +43,7 @@
     "file-loader": "^0.10.0",
     "friendly-errors-webpack-plugin": "^1.1.3",
     "function-bind": "^1.1.0",
+    "handlebars": "^4.0.10",
     "html-webpack-plugin": "^2.28.0",
     "http-proxy-middleware": "^0.17.3",
     "less": "^2.7.1",
