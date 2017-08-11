@@ -1,16 +1,16 @@
 <template>
-  <div class="{{name}}">
-    page {{fileName}}
-  </div>
+    <div class="{{name}}">
+        page {{fileName}}
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'hello',
-  components: {
-  },
-  methods: {
-  }
+    name: 'hello',
+    components: {
+    },
+    methods: {
+    }
 }
 </script>
 

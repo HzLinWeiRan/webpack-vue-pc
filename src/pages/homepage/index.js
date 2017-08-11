@@ -1,1 +1,1 @@
-module.exports = require('./homepage.vue') 
+module.exports = require('./homepage.vue')

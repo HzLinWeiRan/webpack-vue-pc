@@ -25,19 +25,28 @@
 ```
 
 ## 环境准备
-
 ``` bash
+# 推荐使用yarn管理依赖
+npm i yarn -g
+yarn config set registry htts://registry.npm.taobao.org
+
 # 安装依赖
-npm install
+npm install || yarn install
 
 # 启动本地调试 localhost:8080
-npm run dev
+npm run dev || yarn dev
 
 # 本地打包压缩
-npm run build
+npm run build || yarn build
 
 # 本地打包压缩并查看项目
-npm run build --report
+npm run build --report || yarn build --report
+
+# 生成page文件
+npm run init page `name` || yarn init page `name`
+
+# 生成component文件
+npm run init component `name` || yarn init component `name`
 ```
 ## 反代理配置
 
@@ -135,10 +144,8 @@ module.exports = {
 
 * vue https://cn.vuejs.org/v2/api vue
 * vuex https://vuex.vuejs.org/zh-cn/ vue状态管理框架
-* vux https://vux.li/#/ vue样式库
-* vue-router vue单页面开发框架
+* element-ui http://element.eleme.io/#/zh-CN vue样式库
+* vue-router https://router.vuejs.org/zh-cn/ vue单页面开发框架
 * axios 
 * less 
-
-...未完待续
 

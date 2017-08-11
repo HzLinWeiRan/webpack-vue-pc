@@ -6,21 +6,20 @@ const instance = axios.create({
 })
 
 instance.interceptors.response.use((res) => {
-    console.log(res);
-    if(!res) {
-        return Promise.reject(res);
+    if (!res) {
+        return Promise.reject(res)
     }
-    return res;
-},(error) => {
-    return Promise.reject(error);
+    return res
+}, (error) => {
+    return Promise.reject(error)
 })
 
 export function fetch(params) {
-    return new Promise((reslove, reject) => {
+    return Promise((reslove, reject) => {
         instance(params).then(res => {
-            reslove(res);
+            reslove(res)
         }).catch(error => {
-            reject(error);
+            reject(error)
         })
     })
 }
@@ -30,7 +29,7 @@ export default {
         return fetch({
             method: 'get',
             url: `/users`,
-            params: params
-        });
+            params
+        })
     }
 }

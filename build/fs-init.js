@@ -85,6 +85,7 @@ if (remain[0] === "page" || remain[0] === "component") {
   var lessTemplate = handlebars.compile(lessFile.toString());
   fs.writeFileSync(path.resolve(pageDir, remain[1] + ".less"), lessTemplate(lessFile.toString(), data), { encoding: 'utf-8', mode: 438, flag: 'w' });
 
+  // 新建模块为页面时，在路由文件中添加配置
   if (remain[0] === "page") {
     var routePath = path.resolve(__dirname, '../src/routes.js');
     var routes = require(routePath);
@@ -95,20 +96,20 @@ if (remain[0] === "page" || remain[0] === "component") {
     // 改变文件路由
     routes.forEach(function (item, i) {
       if (i != 0) {
-        routeWriteStr += "\r\n";
+        routeWriteStr += "\r\n ";
       }
-
+      
       routeWriteStr += "{";
-
-      Object.keys(item).forEach(function (it, j) {
-        routeWriteStr += "\r\n\t";
+      const keys = Object.keys(item)
+      keys.forEach(function (it, j) {
+        routeWriteStr += "\r\n    ";
         routeWriteStr += it + ": "
         if (typeof item[it] !== "function") {
-          routeWriteStr += "\"" + item[it] + "\"";
+          routeWriteStr += "'" + item[it] + "'";
         } else {
           routeWriteStr += item[it];
         }
-        if (j != it.length - 1) {
+        if (j !== keys.length - 1) {
           routeWriteStr += ","
         }
       });
@@ -117,13 +118,15 @@ if (remain[0] === "page" || remain[0] === "component") {
       routeWriteStr += "\r\n},";
     });
 
+    routes.length !== 0 && (routeWriteStr += " ");
+
     routeWriteStr += "{\r\n\
-  path: '/" + data.fileName + "',\r\n\
-  name: '" + data.fileName + "',\r\n\
-  component: function (resolve) {\r\n\
-  \trequire(['./pages/" + data.fileName + "'], resolve);\r\n\
-  }\r\n}";
-    routeWriteStr += "];"
+    path: '/" + data.fileName + "',\r\n\
+    name: '" + data.fileName + "',\r\n\
+    component: function (resolve) {\r\n\
+        require(['./pages/" + data.fileName + "'], resolve)\r\n\
+    }\r\n}"
+    routeWriteStr += "]\r\n"
     console.log(routeWriteStr);
     //fs.rmdirSync(routePath);
     fs.writeFileSync(routePath, routeWriteStr);

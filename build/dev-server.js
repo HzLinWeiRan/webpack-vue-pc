@@ -12,6 +12,7 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var mockMiddleware = require('mock-middlewares')
 var webpackConfig = require('./webpack.dev.conf')
+var c = require('child_process')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -30,7 +31,7 @@ var devMiddleware = require('webpack-dev-middleware')(compiler, {
 })
 
 var hotMiddleware = require('webpack-hot-middleware')(compiler, {
-  log: () => {}
+  log: () => { }
 })
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
@@ -87,12 +88,23 @@ devMiddleware.waitUntilValid(() => {
 
 
 app.use(mockMiddleware({
-  basePath:__dirname,
+  basePath: __dirname,
   mockFolder: '../mocks',
   routeFile: '../config/mock.js'
 }))
 
-var server = app.listen(port)
+var server = app.listen(port, function () {
+  // 自动打开浏览器
+  let cmd;
+  if (process.platform == 'wind32') {
+    cmd = 'start ';
+  } else if (process.platform == 'linux') {
+    cmd = 'xdg-open ';
+  } else if (process.platform == 'darwin') {
+    cmd = 'open ';
+  }
+  c.exec(cmd + uri);
+})
 
 module.exports = {
   ready: readyPromise,
