@@ -96,7 +96,7 @@ app.use(mockMiddleware({
 var server = app.listen(port, function () {
   // 自动打开浏览器
   let cmd;
-  if (process.platform == 'wind32') {
+  if (process.platform == 'win32') {
     cmd = 'start ';
   } else if (process.platform == 'linux') {
     cmd = 'xdg-open ';

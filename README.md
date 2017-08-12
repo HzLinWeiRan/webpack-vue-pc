@@ -43,10 +43,10 @@ npm run build || yarn build
 npm run build --report || yarn build --report
 
 # 生成page文件
-npm run init page `name` || yarn init page `name`
+npm run new page `name` || yarn new page `name`
 
 # 生成component文件
-npm run init component `name` || yarn init component `name`
+npm run new component `name` || yarn new component `name`
 ```
 ## 反代理配置
 
