@@ -1,4 +1,3 @@
 module.exports = {
-    'GET::/api/1.json': 'mock::/users/list.json',
-    'GET::/test/2.json': 'mock::/users/user.js'
+    'POST::/web/mer/saveOrUpdateMer.json': 'mock::/web/mer/saveOrUpdateMer.js',
 }

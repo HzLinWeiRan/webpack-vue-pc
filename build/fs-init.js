@@ -84,7 +84,7 @@ if (remain[0] === "page" || remain[0] === "component") {
   // 创建less文件
   var lessFile = fs.readFileSync(path.resolve(__dirname, './tempJs/index.less'));
   var lessTemplate = handlebars.compile(lessFile.toString());
-  fs.writeFileSync(path.resolve(pageDir, remain[1] + ".less"), lessTemplate(lessFile.toString(), data), { encoding: 'utf-8', mode: 438, flag: 'w' });
+  fs.writeFileSync(path.resolve(pageDir, remain[1] + ".less"), lessTemplate(data), { encoding: 'utf-8', mode: 438, flag: 'w' });
 
   // 新建模块为页面时，在路由文件中添加配置
   if (remain[0] === "page") {

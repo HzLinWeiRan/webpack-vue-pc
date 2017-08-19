@@ -4,6 +4,7 @@
             <el-radio class="radio" label="1">{{msg}}</el-radio>
             <el-radio class="radio" label="2">{{msg}}</el-radio>
         </el-radio-group>
+        
         <router-view></router-view>
         <!-- <transition name="move" mode="out-in" appear>
             <keep-alive>
