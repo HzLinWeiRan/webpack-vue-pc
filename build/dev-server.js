@@ -13,6 +13,7 @@ var proxyMiddleware = require('http-proxy-middleware')
 var mockMiddleware = require('mock-middlewares')
 var webpackConfig = require('./webpack.dev.conf')
 var c = require('child_process')
+var net = require('net')
 
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
@@ -67,48 +68,100 @@ app.use(hotMiddleware)
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 
+// 检测port是否被占用
+function probe(port, callback) {
 
-var uri = 'http://localhost:' + port
+  var server = net.createServer().listen(port)
 
-var _resolve
-var readyPromise = new Promise(resolve => {
-  _resolve = resolve
-})
+  var calledOnce = false
 
-console.log('> Starting dev server...')
-devMiddleware.waitUntilValid(() => {
-  console.log('> Listening at ' + uri + '\n')
-  // when env is testing, don't need open it
+  var timeoutRef = setTimeout(function () {
+    calledOnce = true
+    callback(false, port)
+  }, 2000)
 
-  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-    opn(uri)
-  }
-  _resolve()
-})
+  timeoutRef.unref()
 
+  var connected = false
 
-app.use(mockMiddleware({
-  basePath: __dirname,
-  mockFolder: '../mocks',
-  routeFile: '../config/mock.js'
-}))
+  server.on('listening', function () {
+    clearTimeout(timeoutRef)
 
-var server = app.listen(port, function () {
-  // 自动打开浏览器
-  let cmd;
-  if (process.platform == 'win32') {
-    cmd = 'start ';
-  } else if (process.platform == 'linux') {
-    cmd = 'xdg-open ';
-  } else if (process.platform == 'darwin') {
-    cmd = 'open ';
-  }
-  c.exec(cmd + uri);
-})
+    if (server)
+      server.close()
 
-module.exports = {
-  ready: readyPromise,
-  close: () => {
-    server.close()
-  }
+    if (!calledOnce) {
+      calledOnce = true
+      callback(true, port)
+    }
+  })
+
+  server.on('error', function (err) {
+    clearTimeout(timeoutRef)
+
+    var result = true
+    if (err.code === 'EADDRINUSE')
+      result = false
+
+    if (!calledOnce) {
+      calledOnce = true
+      callback(result, port)
+    }
+  })
 }
+
+
+(function startPort(port) {
+  probe(port, function (bl, port) {
+    if (bl) {
+      var uri = 'http://localhost:' + port
+
+      var _resolve
+      var readyPromise = new Promise(resolve => {
+        _resolve = resolve
+      })
+
+      console.log('> Starting dev server...')
+      devMiddleware.waitUntilValid(() => {
+        console.log('> Listening at ' + uri + '\n')
+        // when env is testing, don't need open it
+
+        if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+          opn(uri)
+        }
+        _resolve()
+      })
+
+
+      app.use(mockMiddleware({
+        basePath: __dirname,
+        mockFolder: '../mocks',
+        routeFile: '../config/mock.js'
+      }))
+
+      var server = app.listen(port, function () {
+        // 自动打开浏览器
+        let cmd;
+        if (process.platform == 'win32') {
+          cmd = 'start ';
+        } else if (process.platform == 'linux') {
+          cmd = 'xdg-open ';
+        } else if (process.platform == 'darwin') {
+          cmd = 'open ';
+        }
+        c.exec(cmd + uri);
+      })
+
+      module.exports = {
+        ready: readyPromise,
+        close: () => {
+          server.close()
+        }
+      }
+
+    } else {
+      startPort(port + 1)
+    }
+
+  })
+}(port))
