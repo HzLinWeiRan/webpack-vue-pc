@@ -7,10 +7,12 @@ import VueRouter from 'vue-router'
 import App from './App'
 // import store from './store'
 import api from './fetch/api'
+import VeeValidate from 'vee-validate'
 // import Hello from './components/Hello'
 
 Vue.prototype.$api = api
 Vue.use(VueRouter)
+Vue.use(VeeValidate)
 
 const routes = require('./routes.js')
 

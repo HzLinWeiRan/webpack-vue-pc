@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var handlebars = require('handlebars');
+var beautify = require('js-beautify').js_beautify;
 //fs.readFileSync('../src/')
 
 var remain = process.argv.slice(2);
@@ -60,7 +61,7 @@ if (remain[0] === "page" || remain[0] === "component") {
     fileName: parseName(remain[1])
   }
 
-  var pagePath = path.resolve(__dirname, remain[0] === "page"?"../src/pages":"../src/components");
+  var pagePath = path.resolve(__dirname, remain[0] === "page" ? "../src/pages" : "../src/components");
   var pageDir = path.resolve(pagePath, data.fileName);
 
   // 文件校验
@@ -89,22 +90,27 @@ if (remain[0] === "page" || remain[0] === "component") {
   if (remain[0] === "page") {
     var routePath = path.resolve(__dirname, '../src/routes.js');
     var routes = require(routePath);
+    routes.push({
+      path: data.fileName ,
+      name: data.fileName,
+      component: function (resolve) {
+          require(['./pages/' + data.fileName], resolve)
+      }
+    });
 
-
-    var routeWriteStr = "module.exports = [";
+    var routeWriteStr = "module.exports=";
 
     // 改变文件路由
-    routes.forEach(function (item, i) {
-      if (i != 0) {
-        routeWriteStr += "\r\n ";
-      }
-      
-      routeWriteStr += "{";
+    function parseRoutes(item) {
+      var isArray = item instanceof Array;
+      !isArray && (routeWriteStr += "{");
+      isArray && (routeWriteStr += "[");
       const keys = Object.keys(item)
       keys.forEach(function (it, j) {
-        routeWriteStr += "\r\n    ";
-        routeWriteStr += it + ": "
-        if (typeof item[it] !== "function") {
+        !isArray && (routeWriteStr += it + ":")
+        if (typeof item[it] === "object") {
+          parseRoutes(item[it]);
+        } else if (typeof item[it] !== "function") {
           routeWriteStr += "'" + item[it] + "'";
         } else {
           routeWriteStr += item[it];
@@ -114,20 +120,13 @@ if (remain[0] === "page" || remain[0] === "component") {
         }
       });
 
+      
+      !isArray && (routeWriteStr += "}")
+      isArray && (routeWriteStr += "]")
 
-      routeWriteStr += "\r\n},";
-    });
-
-    routes.length !== 0 && (routeWriteStr += " ");
-
-    routeWriteStr += "{\r\n\
-    path: '/" + data.fileName + "',\r\n\
-    name: '" + data.fileName + "',\r\n\
-    component: function (resolve) {\r\n\
-        require(['./pages/" + data.fileName + "'], resolve)\r\n\
-    }\r\n}"
-    routeWriteStr += "]\r\n"
-    console.log(routeWriteStr);
+    }
+    parseRoutes(routes);
+    routeWriteStr = beautify(routeWriteStr, { indent_size: 4 })
     //fs.rmdirSync(routePath);
     fs.writeFileSync(routePath, routeWriteStr);
   }
