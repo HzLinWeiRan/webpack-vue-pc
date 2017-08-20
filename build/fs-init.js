@@ -93,9 +93,9 @@ if (remain[0] === "page" || remain[0] === "component") {
     routes.push({
       path: data.fileName ,
       name: data.fileName,
-      component: eval('(function (resolve) {\
+      component: eval('(resolve => \
           require([\'./pages/' + data.fileName + '\'], resolve)\
-      })')
+      )')
     });
 
     var routeWriteStr = "module.exports=";

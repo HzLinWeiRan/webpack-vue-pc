@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div class="vux-demo">
+        <div class="vux-demo" v-if="$route.path === '/h'">
             <img class="logo" src="../../assets/vux_logo.png">
             <h1>{{msg}}</h1>
            <input v-model="text" v-validate="'required'" name="name" data-vv-as="测试" type="text">
            <button @click="subAction">ceshi</button>
-            <router-view v-if="$route.path === '/h/test'"></router-view>
-            <router-view name="b" v-if="$route.path === '/h/b'"></router-view>
         </div>
+        <router-view v-if="$route.path === '/h/test1'"></router-view>
     </div>
+    
 </template>
 
 
@@ -21,12 +21,11 @@ export default {
         }
     },
     created: function () {
+        console.log(this.$route)
         this.$parent.$emit('radio-msg', 'test')
     },
     methods: {
         subAction() {
-            debugger
-            console.log(this.$validator)
             this.$validator.validateAll().then((result) => {
                 console.log(this.errors.all())
                 console.log(this.errors.first('name'))

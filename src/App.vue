@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <span v-for="item in $route.matched" :key="item.name" > {{item.name}}</span>
         <el-radio-group v-model="radio" @change="change">
             <el-radio class="radio" label="1">{{msg}}</el-radio>
             <el-radio class="radio" label="2">{{msg}}</el-radio>
@@ -24,11 +25,12 @@ export default {
         })
     },
     created() {
-        const action = 'test'
+        /* const action = 'test'
         messageBox({
             type: 'info',
             message: `action: ${action}`
-        })
+        }) */
+        console.log(messageBox)
     },
     data() {
         return {
