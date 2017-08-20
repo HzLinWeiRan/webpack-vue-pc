@@ -1,13 +1,13 @@
 module.exports = [{
-    path: '/test10',
-    name: 'test10',
+    path: '/',
+    name: '首页',
     component: function(resolve) {
-        require(['./pages/test10'], resolve)
+        require(['./pages/homepage'], resolve)
     }
 }, {
-    path: 'test66',
-    name: 'test66',
+    path: 'test1',
+    name: 'test1',
     component: function(resolve) {
-        require(['./pages/' + data.fileName], resolve)
+        require(['./pages/test1'], resolve)
     }
 }]

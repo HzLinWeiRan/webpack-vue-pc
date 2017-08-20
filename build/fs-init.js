@@ -93,9 +93,9 @@ if (remain[0] === "page" || remain[0] === "component") {
     routes.push({
       path: data.fileName ,
       name: data.fileName,
-      component: function (resolve) {
-          require(['./pages/' + data.fileName], resolve)
-      }
+      component: eval('(function (resolve) {\
+          require([\'./pages/' + data.fileName + '\'], resolve)\
+      })')
     });
 
     var routeWriteStr = "module.exports=";
@@ -110,10 +110,10 @@ if (remain[0] === "page" || remain[0] === "component") {
         !isArray && (routeWriteStr += it + ":")
         if (typeof item[it] === "object") {
           parseRoutes(item[it]);
-        } else if (typeof item[it] !== "function") {
-          routeWriteStr += "'" + item[it] + "'";
-        } else {
+        } else if (typeof item[it] === "function") {
           routeWriteStr += item[it];
+        } else {
+          routeWriteStr += "'" + item[it] + "'";
         }
         if (j !== keys.length - 1) {
           routeWriteStr += ","
